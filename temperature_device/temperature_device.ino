@@ -19,7 +19,6 @@ void setup()
    Serial.begin(115200);
    sensor.begin();
    WiFiManager wifiManager;
-   wifiManager.resetSettings();
    wifiManager.autoConnect("SousVideHomeMade");
    Serial.println("connected :)");
 

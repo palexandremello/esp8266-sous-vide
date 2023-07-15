@@ -32,15 +32,15 @@ class TimerCooker {
 };
 
 TimerCooker timer_cooker(60000);
-
+TemperatureSensor temperature_sensor(20);
 void setup()
 {
    Serial.begin(115200);
-   sensor.begin();
    WiFiManager wifiManager;
    wifiManager.autoConnect("SousVideHomeMade");
    Serial.println("connected :)");
    timer_cooker.startTimer();
+   temperature_sensor.setup();
 
 }
 
@@ -48,6 +48,8 @@ void setup()
 
 void loop()
 {
+  float temperature = temperature_sensor.getTemperature();
+  Serial.println(temperature);
   if (timer_cooker.isTimeUp()) {
     Serial.println("Time's up!!");
   } else {

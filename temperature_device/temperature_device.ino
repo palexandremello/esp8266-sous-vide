@@ -51,15 +51,17 @@ void setup()
 void loop()
 {
   float temperature = temperature_sensor.getTemperature();
+  Serial.println("Temperature now is: " + String(temperature) + "ºC");
+
   if (timer_cooker.isTimeUp()) {
     Serial.println("Time's up!!");
   } else {
-    if (cooking_pot.isReachMaxTemperature(temperature)) {
+    cooking_pot.isReachMaxTemperature(temperature);
+    if (cooking_pot.getTemperatureReached()) {
       Serial.println("Temperature now is: " + String(temperature) + "ºC");
       Serial.println("Reached limited, deactivate cooking pot");
     }
   }
-  delay(1000);
 
 }
 

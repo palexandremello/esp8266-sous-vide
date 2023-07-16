@@ -27,7 +27,6 @@ void setup()
 
 }
 
-
 void loop()
 {
   float temperature = temperature_sensor.getTemperature();

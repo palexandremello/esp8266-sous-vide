@@ -61,8 +61,9 @@ void loop()
 //  while (isCooking) {
 //    currentMillis = millis();  //get the current "time" (actually the number of milliseconds since the program started)
 //
-//    timer_cooker.execute_time();
-//    if (currentMillis <= timingCooking) {
+//    timer_cooker.execute_time();Informações Gerais: O conjunto de dados contém 1168 entradas e 18 colunas. Não há nenhum valor ausente em nenhuma das colunas.
+
+
 //     
 //        float temp = getTemperature(sensor);
  //       Serial.println(temp);

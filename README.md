@@ -22,7 +22,7 @@ The `loop()` function is the main program loop. It continually reads the tempera
 Cooking and electronics are two areas that can seem very different, but when combined, can result in interesting and unique projects like this one. The goal of this project was to create a homemade Sous Vide cooker using an ESP8266 and to learn more about IoT and embedded systems in the process.
 
 ## How to Use
-To use this project, you need an ESP8266, a temperature sensor, and a relay to control the heat source. Upload the code to the ESP8266 using the Arduino IDE. The ESP8266 will create a Wi-Fi access point that you can connect to. Once connected, the device will start cooking and maintain the temperature for the set amount of time.
+To use this project, you need an ESP8266, a temperature sensor (DS18B20 temperature probe), and a relay to control the heat source. Upload the code to the ESP8266 using the Arduino IDE. The ESP8266 will create a Wi-Fi access point that you can connect to. Once connected, the device will start cooking and maintain the temperature for the set amount of time.
 
 ## Future Work
 There are many potential improvements and additions for this project. Some ideas include adding a user interface to set the cooking temperature and time, integrating with a mobile app for remote monitoring and control, and improving the temperature control algorithm for more precise cooking.

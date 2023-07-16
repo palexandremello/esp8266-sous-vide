@@ -36,7 +36,8 @@ void loop()
   } else {
     cooking_pot.isReachMaxTemperature(temperature);
     cooking_pot.checkRele();
+    timer_cooker.printRemainingTime();
+
   }
 
-  timer_cooker.printRemainingTime();
 }

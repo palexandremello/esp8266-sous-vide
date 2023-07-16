@@ -9,7 +9,7 @@ class TemperatureSensor {
     OneWire barramento;
     DallasTemperature sensor;
     float maxTemperatureCooking;
-    float temperaturesSamples[MAX_SAMPLES];
+    float temperaturesSamples[MAX_SAMPLES] = {0.0};
     int currentSampleIndex;
     int sampleCount;
   
@@ -27,24 +27,10 @@ class TemperatureSensor {
 
      void addSample(float sample) {
       temperaturesSamples[currentSampleIndex] = sample;
-      Serial.print("Adicionando amostra no índice ");
-      Serial.print(currentSampleIndex);
-      Serial.print(": ");
-      Serial.println(sample);
-
       currentSampleIndex = (currentSampleIndex + 1) % MAX_SAMPLES;
       
       if (sampleCount < MAX_SAMPLES) {
         sampleCount++;
-      }
-
-          // Imprimir todo o buffer circular após a adição da nova amostra
-      Serial.println("Estado atual do buffer circular:");
-      for (int i = 0; i < sampleCount; i++) {
-           Serial.print("Índice ");
-           Serial.print(i);
-           Serial.print(": ");
-           Serial.println(temperaturesSamples[i]);
       }
 
      }

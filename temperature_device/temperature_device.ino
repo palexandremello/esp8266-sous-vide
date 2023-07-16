@@ -50,6 +50,7 @@ void loop()
 {
   float temperature = temperature_sensor.getTemperature();
   Serial.println(temperature);
+  delay(1000);
   if (timer_cooker.isTimeUp()) {
     Serial.println("Time's up!!");
   } else {

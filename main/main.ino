@@ -5,9 +5,10 @@
 #include "temperature.h"
 #include "cooking_pot.h"
 #include "timer.h"
+#include "sous_vide_orchestrator.h"
 
 #define LED_PIN 16
-#define MAX_TEMPERATURE 20
+#define MAX_TEMPERATURE 45
 unsigned long timingCooking = 300000;
 
 
@@ -15,29 +16,20 @@ TimerCooker timer_cooker(timingCooking);
 TemperatureSensor temperature_sensor;
 CookingPot cooking_pot(MAX_TEMPERATURE, LED_PIN);
 
+SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, MAX_TEMPERATURE);
 void setup()
 {
    Serial.begin(115200);
    WiFiManager wifiManager;
    wifiManager.autoConnect("SousVideHomeMade");
    Serial.println("connected :)");
-   timer_cooker.startTimer();
-   temperature_sensor.setup();
-   cooking_pot.setup();
+   sous_vide_orchestrator.setup();
 
 }
 
 void loop()
 {
-  float temperature = temperature_sensor.getTemperature();
 
-  if (timer_cooker.isTimeUp()) {
-    Serial.println("Time's up!!");
-  } else {
-    cooking_pot.isReachMaxTemperature(temperature);
-    cooking_pot.checkRele();
-    timer_cooker.printRemainingTime();
-
-  }
+  sous_vide_orchestrator.update();
 
 }

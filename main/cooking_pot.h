@@ -40,7 +40,7 @@ class CookingPot {
         setReleStatus();
 
         if (previousReleStatus != isReleActivate){
-          digitalWrite(relePin, isReleActivate ? HIGH : LOW);
+          digitalWrite(relePin, isReleActivate ? LOW : HIGH);
           previousReleStatus = isReleActivate;
         }
       }

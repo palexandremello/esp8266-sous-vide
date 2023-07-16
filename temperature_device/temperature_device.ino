@@ -4,11 +4,11 @@
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager​
 #include "temperature.h"
 #include "cooking_pot.h"
+#include "timer.h"
 
 #define LED_PIN 16
 #define MAX_TEMPERATURE 20
 unsigned long timingCooking = 300000;
-bool isReleActivate = false;
 
 
 TimerCooker timer_cooker(timingCooking);

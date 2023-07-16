@@ -1,7 +1,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #define D3 0
-#define MAX_SAMPLES 10
+#define MAX_SAMPLES 5
 
 
 class TemperatureSensor {

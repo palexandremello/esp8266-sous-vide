@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>         //https://github.com/esp8266/Arduino
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager​
 #include "temperature.h"
+#include "cooking_pot.h"
 
 unsigned long startMillis;  //some global variables available anywhere in the program
 unsigned long currentMillis;
@@ -32,7 +33,8 @@ class TimerCooker {
 };
 
 TimerCooker timer_cooker(60000);
-TemperatureSensor temperature_sensor(20);
+TemperatureSensor temperature_sensor;
+CookingPot cooking_pot(65);
 void setup()
 {
    Serial.begin(115200);
@@ -49,13 +51,16 @@ void setup()
 void loop()
 {
   float temperature = temperature_sensor.getTemperature();
-  Serial.println(temperature);
-  delay(1000);
   if (timer_cooker.isTimeUp()) {
     Serial.println("Time's up!!");
   } else {
-    Serial.println("Still cooking!!");
+    if (cooking_pot.isReachMaxTemperature(temperature)) {
+      Serial.println("Temperature now is: " + String(temperature) + "ºC");
+      Serial.println("Reached limited, deactivate cooking pot");
+    }
   }
+  delay(1000);
+
 }
 
 

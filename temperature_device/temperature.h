@@ -8,14 +8,12 @@ class TemperatureSensor {
   private:
     OneWire barramento;
     DallasTemperature sensor;
-    float maxTemperatureCooking;
     float temperaturesSamples[MAX_SAMPLES] = {0.0};
     int currentSampleIndex;
     int sampleCount;
   
   public:
-     TemperatureSensor(float maxTemperatureCooking) : barramento(D3), sensor(&barramento) {
-      this->maxTemperatureCooking = maxTemperatureCooking;
+     TemperatureSensor() : barramento(D3), sensor(&barramento) {
       this->currentSampleIndex = 0;
       this->sampleCount = 0;
      }

@@ -8,8 +8,8 @@
 #include "sous_vide_orchestrator.h"
 
 #define LED_PIN 16
-#define MAX_TEMPERATURE 45
-unsigned long timingCooking = 300000;
+#define MAX_TEMPERATURE 63.0
+unsigned long timingCooking = 3600000;
 
 
 TimerCooker timer_cooker(timingCooking);

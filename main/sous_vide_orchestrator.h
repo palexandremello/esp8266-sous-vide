@@ -30,11 +30,17 @@ class SousVideOrchestrator {
         if (!isTimerStarted && temperature >= START_THRESHOLD) {
           timerCooker.startTimer();
           isTimerStarted = true;
+        } else {
+            Serial.print("Temperatura Atual: ");
+            Serial.println(temperature);
+
         }
 
         if (isTimerStarted) {
             cookingPot.isReachMaxTemperature(temperature);
             cookingPot.checkRele();
+            Serial.print("Temperatura Atual: ");
+            Serial.println(temperature);
             timerCooker.printRemainingTime();
 
             if (timerCooker.isTimeUp()) {

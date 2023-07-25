@@ -28,10 +28,8 @@ class CookingPot {
       void setReleStatus() {
 
         if (!reachedTemperature && !isReleActivate) {
-          Serial.println("Activate rele");
           isReleActivate = true;
         } else if (reachedTemperature && isReleActivate) {
-          Serial.println("Deactivate rele");
           isReleActivate = false;
         } 
       }

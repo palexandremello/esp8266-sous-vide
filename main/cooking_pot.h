@@ -26,7 +26,8 @@ class CookingPot {
       }
 
       void setReleStatus() {
-
+        Serial.println(reachedTemperature);
+        Serial.println(isReleActivate);
         if (!reachedTemperature && !isReleActivate) {
           isReleActivate = true;
         } else if (reachedTemperature && isReleActivate) {
@@ -37,10 +38,7 @@ class CookingPot {
       void checkRele() {
         setReleStatus();
 
-        if (previousReleStatus != isReleActivate){
-          digitalWrite(relePin, isReleActivate ? LOW : HIGH);
-          previousReleStatus = isReleActivate;
-        }
+         digitalWrite(relePin, isReleActivate ? LOW : HIGH);
       }
 
       bool getTemperatureReached() {

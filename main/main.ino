@@ -10,33 +10,8 @@
 #include "sous_vide_orchestrator.h"
 
 #define LED_PIN 16
-#define MAX_TEMPERATURE 63.0
-unsigned long timingCooking = 3600000;
-
-
-WiFiClient espClient;                                                   
-PubSubClient client(espClient);                                         
-unsigned long lastMsg = 0;
-#define MSG_BUFFER_SIZE (50)
-char msg[MSG_BUFFER_SIZE];
-int value = 0;
-
-void callback(char* topic, byte* payload, unsigned int length) {        
-  Serial.print("Mensagem recebida [");                                  
-  Serial.print(topic);                                                  
-  Serial.print("] ");                                                   
-  for (int i = 0; i < length; i++) {                                    
-    Serial.print((char)payload[i]);                                     
-  }
-  Serial.println();                                                     
-
-  if ((char)payload[0] == '1') {                                        
-    digitalWrite(BUILTIN_LED, LOW);                                     
-  } else {                                                              
-    digitalWrite(BUILTIN_LED, HIGH);                                    
-  }
-
-}
+#define MAX_TEMPERATURE 58
+unsigned long timingCooking =  20 * 60 * 60 * 1000;
 
 
 TimerCooker timer_cooker(timingCooking);
@@ -52,21 +27,15 @@ void setup()
    Serial.println("connected :)");
    sous_vide_orchestrator.setup();
 
-   client.setServer(MQTT_SERVER, MQTT_PORT);
-   client.setCallback(callback);
-
-
 
 }
 
 void loop()
 {
 
-  client.loop();                                                         
 
   sous_vide_orchestrator.update();
 
-  client.publish("sousvide/temperature", "Hello World");                        
 
 
 }

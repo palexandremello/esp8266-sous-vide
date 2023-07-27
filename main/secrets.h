@@ -5,3 +5,4 @@
 #define WIFI_PASSWORD "hzupeJYw"
 #define MQTT_USER "pmello"
 #define MQTT_PASSWORD "147258Loki"
+#define AUTO_AP_SOUSVIDE "SousVideHomeMade"

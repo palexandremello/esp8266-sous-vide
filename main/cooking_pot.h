@@ -18,15 +18,15 @@ class CookingPot {
       }
 
       void setRelayStatus(bool activate) {
-        isReleActivate = activate;
+        isRelayActivate = activate;
       }
 
       bool getReleStatus() {
-        return isReleActivate;
+        return isRelayActivate;
       }
 
       void checkRele() {
-        digitalWrite(relayPin, isReleActivate ? LOW : HIGH);
+        digitalWrite(relayPin, isRelayActivate ? LOW : HIGH);
       }
 
 };

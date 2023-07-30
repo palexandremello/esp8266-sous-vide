@@ -9,6 +9,7 @@
 #include "temperature.h"
 #include "cooking_pot.h"
 #include "mqtt_manager.h"
+#include "warmup_controller.h"
 #include "sous_vide_orchestrator.h"
 
 #define RELE_PIN 16
@@ -21,8 +22,8 @@ MQTTManager mqttManager(MQTT_SERVER);
 TimerCooker timer_cooker(timingCooking);
 TemperatureSensor temperature_sensor;
 CookingPot cooking_pot(RELE_PIN);
-
-SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, mqttManager, MAX_TEMPERATURE);
+WarmupController warmup_controller(cooking_pot, MAX_TEMPERATURE * 0.9);
+SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, mqttManager, warmup_controller, MAX_TEMPERATURE);
 
 void setup() {
   Serial.begin(115200);

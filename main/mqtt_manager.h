@@ -54,10 +54,11 @@ class MQTTManager {
 
       }
 
-      void publishTemperatureAndTime(float temperature, long remainingTime) {
+      void publishMetrics(float temperature, long remainingTime, bool isReleOn) {
         StaticJsonDocument<200> doc;
         doc["temperature"] = temperature;
         doc["remainingTime"] = remainingTime;
+        doc["isReleOn"] = isReleOn;
         String payload;
         serializeJson(doc, payload);
         client.publish(MQTT_SOUSVIDE_TEMPERATURE, payload.c_str());

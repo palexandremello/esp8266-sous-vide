@@ -31,7 +31,7 @@ class SousVideOrchestrator {
         } else {
             Serial.print("Temperatura Atual: ");
             Serial.println(temperature);
-            mqttManager.publishTemperatureAndTime(temperature, timerCooker.getRemainingTimeMillis());
+            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
         }
 
         if (isTimerStarted) {
@@ -40,7 +40,7 @@ class SousVideOrchestrator {
             Serial.print("Temperatura Atual: ");
             Serial.println(temperature);
             timerCooker.printRemainingTime();
-            mqttManager.publishTemperatureAndTime(temperature, timerCooker.getRemainingTimeMillis());
+            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
 
             if (timerCooker.isTimeUp()) {
               Serial.println("Time's up!!");

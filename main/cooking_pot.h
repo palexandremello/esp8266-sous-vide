@@ -7,17 +7,17 @@ class CookingPot {
       bool reachedTemperature = false;
       bool isReleActivate = false;
       bool previousReleStatus = false;
-      int relePin;
+      int relayPin;
 
     
     public:
-      CookingPot(float maxTemperatureCooking, int relePin) {
+      CookingPot(float maxTemperatureCooking, int relayPin) {
         this->maxTemperatureCooking = maxTemperatureCooking;
-        this->relePin = relePin;
+        this->relayPin = relayPin;
       }
 
       void setup() {
-        pinMode(relePin, OUTPUT);
+        pinMode(relayPin, OUTPUT);
 
       }
 
@@ -35,10 +35,14 @@ class CookingPot {
         } 
       }
 
+      bool getReleStatus() {
+        return isReleActivate;
+      }
+
       void checkRele() {
         setReleStatus();
 
-         digitalWrite(relePin, isReleActivate ? LOW : HIGH);
+         digitalWrite(relayPin, isReleActivate ? LOW : HIGH);
       }
 
       bool getTemperatureReached() {

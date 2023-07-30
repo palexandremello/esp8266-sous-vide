@@ -38,9 +38,28 @@ class SousVideOrchestrator {
           mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
         } else {
 
-          Serial.println("Estou cozinhando o cuzinho do Igu");
+          if (!isTimerStarted && temperature >= MAX_TEMPERATURE_COOKING) {
+            timerCooker.startTimer();
+            isTimerStarted = true;
+            cookingPot.setRelayStatus(false);
+            cookingPot.checkRele();
+          } else if (temperature < MAX_TEMPERATURE_COOKING) {
+            cookingPot.setRelayStatus(true);
+            cookingPot.checkRele();
+
+          }
+
+          mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
+
         }
-  
+
+        if (isTimerStarted && timerCooker.isTimeUp()) {
+            Serial.println("Time's up!!");
+            isTimerStarted = false;
+            cookingPot.setRelayStatus(false);
+            cookingPot.checkRele();
+        }
+
   }
 
 };

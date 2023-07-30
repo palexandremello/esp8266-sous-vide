@@ -7,6 +7,7 @@ class SousVideOrchestrator {
        CookingPot& cookingPot;
        MQTTManager& mqttManager;
        bool isTimerStarted;
+       bool isWarmupCompleted = false;
        const float MAX_TEMPERATURE_COOKING;
        const float START_THRESHOLD;
 
@@ -25,28 +26,14 @@ class SousVideOrchestrator {
       void update() {
         float temperature = temperatureSensor.getTemperature();
 
-        if (!isTimerStarted && temperature >= START_THRESHOLD) {
-          timerCooker.startTimer();
-          isTimerStarted = true;
-        } else {
-            Serial.print("Temperatura Atual: ");
-            Serial.println(temperature);
-            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
-        }
-
-        if (isTimerStarted) {
-            cookingPot.isReachMaxTemperature(temperature);
+        if (!isWarmupCompleted) {
+          if (temperature >= START_THRESHOLD) {
+            isWarmupCompleted = true;
+            timerCooker.startTimer();
             cookingPot.checkRele();
-            Serial.print("Temperatura Atual: ");
-            Serial.println(temperature);
-            timerCooker.printRemainingTime();
-            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
-
-            if (timerCooker.isTimeUp()) {
-              Serial.println("Time's up!!");
-              isTimerStarted = false;
-            }
-
+          } else {
+            c
+          }
         }
-      }
 };
+

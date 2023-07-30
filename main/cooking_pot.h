@@ -41,8 +41,8 @@ class CookingPot {
 
       void checkRele() {
         setReleStatus();
-
-         digitalWrite(relayPin, isReleActivate ? LOW : HIGH);
+        Serial.println(isReleActivate);
+        digitalWrite(relayPin, isReleActivate ? LOW : HIGH);
       }
 
       bool getTemperatureReached() {

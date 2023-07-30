@@ -8,6 +8,7 @@ class SousVideOrchestrator {
        WarmupController& warmupController;
        MQTTManager& mqttManager;
        bool isTimerStarted;
+       bool timerHasBeenStarted;
        bool isWarmupCompleted = false;
        const float MAX_TEMPERATURE_COOKING;
        const float START_THRESHOLD;
@@ -22,6 +23,7 @@ class SousVideOrchestrator {
         warmupController(warmupController), MAX_TEMPERATURE_COOKING(maxTemperature), 
         START_THRESHOLD(double(maxTemperature * 0.9)) {
         this->isTimerStarted = false;
+        this->timerHasBeenStarted = false; 
       }
 
       void setup() {
@@ -38,28 +40,28 @@ class SousVideOrchestrator {
           mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
         } else {
 
-          if (!isTimerStarted && temperature >= MAX_TEMPERATURE_COOKING) {
+        if (!timerHasBeenStarted && temperature >= MAX_TEMPERATURE_COOKING) {
             timerCooker.startTimer();
             isTimerStarted = true;
+            timerHasBeenStarted = true;
+        }
+
+        if (temperature >= MAX_TEMPERATURE_COOKING) {
             cookingPot.setRelayStatus(false);
-            cookingPot.checkRele();
-          } else if (temperature < MAX_TEMPERATURE_COOKING) {
+        } else {
             cookingPot.setRelayStatus(true);
-            cookingPot.checkRele();
-
-          }
-
-          mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
-
         }
 
-        if (isTimerStarted && timerCooker.isTimeUp()) {
-            Serial.println("Time's up!!");
-            isTimerStarted = false;
-            cookingPot.setRelayStatus(false);
-            cookingPot.checkRele();
-        }
+        cookingPot.checkRele();
+        mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
+    }
 
+    if (isTimerStarted && timerCooker.isTimeUp()) {
+        Serial.println("Time's up!!");
+        isTimerStarted = false;
+        cookingPot.setRelayStatus(false);
+        cookingPot.checkRele();
+    }
   }
 
 };

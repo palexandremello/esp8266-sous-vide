@@ -26,14 +26,16 @@ class SousVideOrchestrator {
       void update() {
         float temperature = temperatureSensor.getTemperature();
 
-        if (!isWarmupCompleted) {
-          if (temperature >= START_THRESHOLD) {
-            isWarmupCompleted = true;
-            timerCooker.startTimer();
-            cookingPot.checkRele();
-          } else {
-            c
-          }
+        warmupController.warmup(temperature);
+
+        if (warmupController.isWarmupDone()) {
+            if (temperature >= MAX_TEMPERATURE_COOKING) {
+                cookingPot.setReleStatus(false);
+            } else if (temperature <= START_THRESHOLD) {
+                cookingPot.setReleStatus(true);
+            }
+
         }
+
 };
 

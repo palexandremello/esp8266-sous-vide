@@ -3,16 +3,12 @@
 class CookingPot {
 
     private:
-      float maxTemperatureCooking;
-      bool reachedTemperature = false;
-      bool isReleActivate = false;
-      bool previousReleStatus = false;
+      bool isRelayActivate = false;
       int relayPin;
 
     
     public:
-      CookingPot(float maxTemperatureCooking, int relayPin) {
-        this->maxTemperatureCooking = maxTemperatureCooking;
+      CookingPot(int relayPin) {
         this->relayPin = relayPin;
       }
 
@@ -21,18 +17,8 @@ class CookingPot {
 
       }
 
-      void isReachMaxTemperature(float temperature) {
-        reachedTemperature =  temperature >= maxTemperatureCooking;
-      }
-
-      void setReleStatus() {
-        Serial.println(reachedTemperature);
-        Serial.println(isReleActivate);
-        if (!reachedTemperature && !isReleActivate) {
-          isReleActivate = true;
-        } else if (reachedTemperature && isReleActivate) {
-          isReleActivate = false;
-        } 
+      void setRelayStatus(bool activate) {
+        isReleActivate = activate;
       }
 
       bool getReleStatus() {
@@ -40,13 +26,7 @@ class CookingPot {
       }
 
       void checkRele() {
-        setReleStatus();
-        Serial.println(isReleActivate);
         digitalWrite(relayPin, isReleActivate ? LOW : HIGH);
-      }
-
-      bool getTemperatureReached() {
-        return reachedTemperature;
       }
 
 };

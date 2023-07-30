@@ -30,12 +30,29 @@ class SousVideOrchestrator {
 
         if (warmupController.isWarmupDone()) {
             if (temperature >= MAX_TEMPERATURE_COOKING) {
-                cookingPot.setReleStatus(false);
+              timerCooker.startTimer();
+              isTimerStarted = true;
             } else if (temperature <= START_THRESHOLD) {
                 cookingPot.setReleStatus(true);
+
             }
 
         }
+        Serial.println("isTimerStarted: ", isTimerStarted);
+        if (isTimerStarted) {
+          cookingPot.isReachMaxTemperature(temperature);
+          cookingPot.checkRele();
+          Serial.print("Temperatura Atual: ");
+          Serial.println(temperature);
+          timerCooker.printRemainingTime();
+          mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
+
+          if (timerCooker.isTimeUp()) {
+              Serial.println("Time's up!!");
+              isTimerStarted = false;
+          }
+  
+  }
 
 };
 

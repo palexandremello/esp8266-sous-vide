@@ -20,7 +20,7 @@ MQTTManager mqttManager(MQTT_SERVER);
 
 TimerCooker timer_cooker(timingCooking);
 TemperatureSensor temperature_sensor;
-CookingPot cooking_pot(MAX_TEMPERATURE, RELE_PIN);
+CookingPot cooking_pot(RELE_PIN);
 
 SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, mqttManager, MAX_TEMPERATURE);
 

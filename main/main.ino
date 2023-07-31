@@ -13,8 +13,8 @@
 #include "sous_vide_orchestrator.h"
 
 #define RELE_PIN 16
-#define MAX_TEMPERATURE 30
-unsigned long timingCooking =  20 * 60 * 60 * 1000;
+#define MAX_TEMPERATURE 63.3
+unsigned long timingCooking =  2 * 60 * 60 * 1000;
 
 // Initialize MQTTManager
 MQTTManager mqttManager(MQTT_SERVER);

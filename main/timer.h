@@ -21,6 +21,10 @@ class TimerCooker {
     startTime = millis();
   }
 
+  void setTimer(unsigned long timeToCook) {
+    this->timingCooking = timeToCook;
+  }
+
   bool isTimeUp() {
     setElapsedTime();
     return (elapsedMillis >= timingCooking);

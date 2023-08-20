@@ -77,7 +77,7 @@ class SousVideOrchestrator: public MQTTCommandListener {
     if (isTimerStarted) {
       timerCooker.resetTimer();
       isTimerStarted = false;
-      timerHasBeensStarted = false;
+      timerHasBeenStarted = false;
     }
   }
 

@@ -37,7 +37,7 @@ There's ample scope for refining and enhancing this project. Possible future imp
 
 - Developing a user interface for more intuitive temperature and time settings.
 - Incorporating a mobile app for remote surveillance and control.
-- Augmenting the temperature control algorithm for even more precise cooking results.
+- Further optimizing the PID temperature control algorithm and exploring more advanced control strategies.
 - Implementing security features, such as encrypted MQTT communications.
 - Designing a printed circuit board (PCB) schematic to make the electronics assembly more accessible and professional.
 - Creating a 3D-printable case (STL files) for the electronic components, ensuring the Sous Vide system is both visually appealing and safely contained.

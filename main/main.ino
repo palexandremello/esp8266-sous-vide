@@ -29,7 +29,7 @@ WarmupController warmup_controller(cooking_pot, MAX_TEMPERATURE * 0.9);
 SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, 
                                             mqttManager, warmup_controller, controller, 
                                             MAX_TEMPERATURE);
-                                            
+
 mqttManager.setCommandListener(&sous_vide_orchestrator);  
 
 void setup() {

@@ -15,8 +15,8 @@ class MQTTManager : public MQTTPublisherInterface {
         });
       }
 
-      void setCommandListener(MQTTCommandListener* listenerPtr) {
-        listener = listenerPtr;
+      void setCommandListener(MQTTCommandListener* listener) {
+          this->listener = listener;
       }
 
       void reconnect() {
@@ -56,7 +56,7 @@ class MQTTManager : public MQTTPublisherInterface {
         }
         Serial.println();
 
-        if (commandListener) {
+        if (listener) {
           if (String (topic) == SET_TEMPERATURE_TOPIC) {
              float temp = messageTemp.toFloat();
              listener->onSetTemperature(temp);

@@ -39,3 +39,9 @@ There's ample scope for refining and enhancing this project. Possible future imp
 - Incorporating a mobile app for remote surveillance and control.
 - Augmenting the temperature control algorithm for even more precise cooking results.
 - Implementing security features, such as encrypted MQTT communications.
+- Designing a printed circuit board (PCB) schematic to make the electronics assembly more accessible and professional.
+- Creating a 3D-printable case (STL files) for the electronic components, ensuring the Sous Vide system is both visually appealing and safely contained.
+- Making the entire project open-source, allowing enthusiasts and hobbyists to easily replicate, customize, and improve upon the existing design.
+- Providing comprehensive documentation on setting up an MQTT server, making it seamless for users to get started with the project.
+
+By encompassing the entire gamut of electronic design, software, and physical casing, this project aims to offer a holistic, end-to-end solution for DIY Sous Vide enthusiasts.

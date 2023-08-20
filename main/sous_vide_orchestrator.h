@@ -1,4 +1,4 @@
-class SousVideOrchestrator {
+class SousVideOrchestrator: public MQTTCommandListener {
 
 
     private:
@@ -10,8 +10,8 @@ class SousVideOrchestrator {
        bool isTimerStarted;
        bool timerHasBeenStarted;
        bool isWarmupCompleted = false;
-       const float MAX_TEMPERATURE_COOKING;
-       const float START_THRESHOLD;
+       float MAX_TEMPERATURE_COOKING;
+       float START_THRESHOLD;
 
     
     public:
@@ -62,6 +62,29 @@ class SousVideOrchestrator {
         cookingPot.setRelayStatus(false);
         cookingPot.checkRele();
     }
+  }
+
+  void onSetTemperature(float temp) override {
+    MAX_TEMPERATURE_COOKING = temp;
+    START_THRESHOLD = temp * 0.9;
+    warmupController.setStartThreshold(START_THRESHOLD);
+    isWarmupCompleted = false;
+  }
+
+  void onSetTimer(unsigned long duration) override {
+    timerCooker.setTimer(duration);
+
+    if (isTimerStarted) {
+      timerCooker.resetTimer();
+      isTimerStarted = false;
+      timerHasBeensStarted = false;
+    }
+  }
+
+  void onStartCooking() override {
+    isWarmupCompleted = false;
+    isTimerStarted = false;
+    timerHasBeenStarted = false;
   }
 
 };

@@ -1,8 +1,9 @@
-class MQTTManager {
+class MQTTManager : public MQTTPublisherInterface {
 
     private:
       WiFiClient espClient;
       PubSubClient client;
+      MQTTCommandListener* listener;
       long lastMsg = 0;
 
     public:
@@ -12,6 +13,10 @@ class MQTTManager {
         client.setCallback([this](char* topic, byte* message, unsigned int length) {
         this->callback(topic, message, length);
         });
+      }
+
+      void setCommandListener(MQTTCommandListener* listener) {
+        commandListener = listener;
       }
 
       void reconnect() {
@@ -41,17 +46,29 @@ class MQTTManager {
       }
 
       void callback(char* topic, byte* message, unsigned int length) {
-
         Serial.print("Message arrived on topic: ");
         Serial.print(topic);
         Serial.print(". Message: ");
         String messageTemp;
         for (int i = 0; i < length; i++) {
-          Serial.print((char)message[i]);
-          messageTemp += (char)message[i];
+            Serial.print((char)message[i]);
+            messageTemp += (char)message[i];
         }
         Serial.println();
 
+        if (commandListener) {
+          if (String (topic) == SET_TEMPERATURE_TOPIC) {
+             float temp = messageTemp.toFloat();
+             listener->onSetTemperature(temp);
+
+          } else if (String(topic) == SET_TIMER_TOPIC) {
+             unsigned long duration = messageTemp.toInt();
+             
+          } else if (String(topic) == START_COOKING_TOPIC) {
+             listener->onStartCooking();
+           }
+
+        }
       }
 
       void publishMetrics(float temperature, long remainingTime, bool isReleOn) {

@@ -7,14 +7,16 @@
 #include "timer.h"
 #include "secrets.h"
 #include "temperature.h"
+#include "mqtt_command_listener.h"
+#include "mqtt_publisher_interface.h"
 #include "cooking_pot.h"
 #include "mqtt_manager.h"
 #include "warmup_controller.h"
 #include "sous_vide_orchestrator.h"
 
 #define RELE_PIN 16
-#define MAX_TEMPERATURE 63.3
-unsigned long timingCooking =  2 * 60 * 60 * 1000;
+#define MAX_TEMPERATURE 0
+unsigned long timingCooking =  0;
 
 // Initialize MQTTManager
 MQTTManager mqttManager(MQTT_SERVER);
@@ -24,6 +26,7 @@ TemperatureSensor temperature_sensor;
 CookingPot cooking_pot(RELE_PIN);
 WarmupController warmup_controller(cooking_pot, MAX_TEMPERATURE * 0.9);
 SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, mqttManager, warmup_controller, MAX_TEMPERATURE);
+mqttManager.setCommandListener(&sous_vide_orchestrator);  
 
 void setup() {
   Serial.begin(115200);

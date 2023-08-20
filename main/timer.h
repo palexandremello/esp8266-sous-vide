@@ -30,6 +30,13 @@ class TimerCooker {
     return (timingCooking - elapsedMillis);
   }
 
+  void resetTimer() {
+    startTime = 0;
+    elapsedMillis = 0;
+    previousRemainingTime = "";
+    elapsedMinutes = 0;
+    }
+
   String getRemainingTime() {
       long remaningSeconds = (timingCooking - elapsedMillis) / 1000;
       int minutes = remaningSeconds / 60;

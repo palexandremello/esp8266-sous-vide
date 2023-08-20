@@ -7,3 +7,6 @@
 #define MQTT_USER "pmello"
 #define MQTT_PASSWORD "147258Loki"
 #define AUTO_AP_SOUSVIDE "SousVideHomeMade"
+#define SET_TEMPERATURE_TOPIC "sousvide/setTemperature"
+#define SET_TIMER_TOPIC "sousvide/setTimer"
+#define START_COOKING_TOPIC "sousvide/startCooking"

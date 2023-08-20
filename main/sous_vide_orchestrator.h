@@ -23,7 +23,7 @@ class SousVideOrchestrator: public MQTTCommandListener {
       : temperatureSensor(temperatureSensor), timerCooker(timerCooker), 
         cookingPot(cookingPot), mqttManager(mqttManager) ,
         warmupController(warmupController), 
-        PIDController(pidController),
+        pidController(pidController),
         MAX_TEMPERATURE_COOKING(maxTemperature), 
         START_THRESHOLD(double(maxTemperature * 0.9)) {
         this->isTimerStarted = false;

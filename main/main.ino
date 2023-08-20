@@ -21,12 +21,15 @@ unsigned long timingCooking =  0;
 
 // Initialize MQTTManager
 MQTTManager mqttManager(MQTT_SERVER);
-
+PIDController controller(0.5, 0, 0);
 TimerCooker timer_cooker(timingCooking);
 TemperatureSensor temperature_sensor;
 CookingPot cooking_pot(RELE_PIN);
 WarmupController warmup_controller(cooking_pot, MAX_TEMPERATURE * 0.9);
-SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, mqttManager, warmup_controller, MAX_TEMPERATURE);
+SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, cooking_pot, 
+                                            mqttManager, warmup_controller, controller, 
+                                            MAX_TEMPERATURE);
+                                            
 mqttManager.setCommandListener(&sous_vide_orchestrator);  
 
 void setup() {

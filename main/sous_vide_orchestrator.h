@@ -39,7 +39,6 @@ class SousVideOrchestrator: public MQTTCommandListener {
 
         if (!warmupController.isWarmupDone()) {
           warmupController.warmup(temperature);
-
           mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), true, false);
         } else {
 

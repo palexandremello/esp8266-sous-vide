@@ -15,8 +15,8 @@ class MQTTManager : public MQTTPublisherInterface {
         });
       }
 
-      void setCommandListener(MQTTCommandListener* listener) {
-        commandListener = listener;
+      void setCommandListener(MQTTCommandListener* listenerPtr) {
+        listener = listenerPtr;
       }
 
       void reconnect() {
@@ -63,6 +63,7 @@ class MQTTManager : public MQTTPublisherInterface {
 
           } else if (String(topic) == SET_TIMER_TOPIC) {
              unsigned long duration = messageTemp.toInt();
+             listener->onSetTimer(duration);
 
           } else if (String(topic) == START_COOKING_TOPIC) {
              listener->onStartCooking();

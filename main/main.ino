@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "secrets.h"
 #include "temperature.h"
+#include "pid_control.h"
 #include "mqtt_command_listener.h"
 #include "mqtt_publisher_interface.h"
 #include "cooking_pot.h"

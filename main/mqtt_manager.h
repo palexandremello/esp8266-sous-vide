@@ -63,7 +63,7 @@ class MQTTManager : public MQTTPublisherInterface {
 
           } else if (String(topic) == SET_TIMER_TOPIC) {
              unsigned long duration = messageTemp.toInt();
-             
+
           } else if (String(topic) == START_COOKING_TOPIC) {
              listener->onStartCooking();
            }
@@ -71,11 +71,13 @@ class MQTTManager : public MQTTPublisherInterface {
         }
       }
 
-      void publishMetrics(float temperature, long remainingTime, bool isReleOn) {
+      void publishMetrics(float temperature, long remainingTime, bool isReleOn, bool isWarmupCompleted, bool isCookingStarted) {
         StaticJsonDocument<200> doc;
         doc["temperature"] = temperature;
         doc["remainingTime"] = remainingTime;
         doc["isReleOn"] = isReleOn;
+        doc["isWarmupCompleted"] = isWarmupCompleted;
+        doc["isCookingStarted"] = isCookingStarted;
         String payload;
         serializeJson(doc, payload);
         client.publish(MQTT_SOUSVIDE_TEMPERATURE, payload.c_str());

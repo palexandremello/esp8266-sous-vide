@@ -7,23 +7,26 @@ class SousVideOrchestrator: public MQTTCommandListener {
        CookingPot& cookingPot;
        WarmupController& warmupController;
        MQTTManager& mqttManager;
+       PIDController& pidController;
        bool isTimerStarted;
        bool timerHasBeenStarted;
        bool isWarmupCompleted = false;
        float MAX_TEMPERATURE_COOKING;
        float START_THRESHOLD;
+       bool newReleStatus;
 
     
     public:
       SousVideOrchestrator(TemperatureSensor& temperatureSensor, TimerCooker& timerCooker,
                            CookingPot& cookingPot, MQTTManager& mqttManager, 
-                           WarmupController& warmupController, float maxTemperature) 
+                           WarmupController& warmupController, PIDController& pidController, float maxTemperature) 
       : temperatureSensor(temperatureSensor), timerCooker(timerCooker), 
         cookingPot(cookingPot), mqttManager(mqttManager) ,
         warmupController(warmupController), MAX_TEMPERATURE_COOKING(maxTemperature), 
         START_THRESHOLD(double(maxTemperature * 0.9)) {
         this->isTimerStarted = false;
-        this->timerHasBeenStarted = false; 
+        this->timerHasBeenStarted = false;
+        this-> newReleStatus = false;
       }
 
       void setup() {
@@ -37,30 +40,26 @@ class SousVideOrchestrator: public MQTTCommandListener {
         if (!warmupController.isWarmupDone()) {
           warmupController.warmup(temperature);
 
-          mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
+          mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), true, false);
         } else {
 
         if (!timerHasBeenStarted && temperature >= MAX_TEMPERATURE_COOKING) {
             timerCooker.startTimer();
             isTimerStarted = true;
             timerHasBeenStarted = true;
+            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), false, true);
         }
 
-        if (temperature >= MAX_TEMPERATURE_COOKING) {
-            cookingPot.setRelayStatus(false);
-        } else {
-            cookingPot.setRelayStatus(true);
-        }
-
+        ControlState newReleStatus = pidController.compute(MAX_TEMPERATURE_COOKING, temperature);
+        cookingPot.setRelayStatus(newReleStatus == ON);
         cookingPot.checkRele();
-        mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus());
+        mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), false, true);
     }
 
     if (isTimerStarted && timerCooker.isTimeUp()) {
         Serial.println("Time's up!!");
         isTimerStarted = false;
-        cookingPot.setRelayStatus(false);
-        cookingPot.checkRele();
+        cookingPot.setRelayStatus(OFF);
     }
   }
 

@@ -1,3 +1,4 @@
+#include "limits.h"
 class TimerCooker {
 
   private:
@@ -8,9 +9,15 @@ class TimerCooker {
     String previousRemainingTime;
     int elapsedMinutes;
 
-    void setElapsedTime() {
-      elapsedMillis = millis() - startTime;
+void setElapsedTime() {
+    unsigned long currentMillis = millis();
+    if (currentMillis >= startTime) {
+        elapsedMillis = currentMillis - startTime;
+    } else {
+        // Handle millis() rollover
+        elapsedMillis = (ULONG_MAX - startTime) + currentMillis;
     }
+}
     
 
   public:

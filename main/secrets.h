@@ -10,3 +10,4 @@
 #define SET_TEMPERATURE_TOPIC "sousvide/setTemperature"
 #define SET_TIMER_TOPIC "sousvide/setTimer"
 #define START_COOKING_TOPIC "sousvide/startCooking"
+#define PID_METRICS "sousvide/pidMetrics"

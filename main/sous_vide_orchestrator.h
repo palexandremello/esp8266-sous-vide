@@ -1,3 +1,5 @@
+#include "sousvide_state.h"
+
 class SousVideOrchestrator: public MQTTCommandListener {
 
 
@@ -15,6 +17,7 @@ class SousVideOrchestrator: public MQTTCommandListener {
        float MAX_TEMPERATURE_COOKING;
        float START_THRESHOLD;
        bool newReleStatus;
+       SousVideState currentState;
 
     
     public:
@@ -31,6 +34,7 @@ class SousVideOrchestrator: public MQTTCommandListener {
         this->timerHasBeenStarted = false;
         this-> newReleStatus = false;
         this-> isCookingStarted = false;
+        this->currentState = IDLE;
       }
 
       void setup() {
@@ -39,33 +43,31 @@ class SousVideOrchestrator: public MQTTCommandListener {
       }
 
 void update() {
-    if (!isCookingStarted){
-      return;
-    }
     float temperature = temperatureSensor.getTemperature();
-    bool isWarmupDone = warmupController.isWarmupDone();
-    
-    if (!isWarmupDone) {
-        warmupController.warmup(temperature);
-        mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), isWarmupDone, isWarmupDone);
-    } else {
-        if (!timerHasBeenStarted && temperature >= MAX_TEMPERATURE_COOKING) {
-            timerCooker.startTimer();
-            isTimerStarted = true;
-            timerHasBeenStarted = true;
-        }
 
-        ControlState newReleStatus = pidController.compute(MAX_TEMPERATURE_COOKING, temperature);
-        cookingPot.setRelayStatus(newReleStatus == ON);
-        cookingPot.checkRele();
-        mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), isWarmupDone, isWarmupDone);
-    }
-
-    if (isTimerStarted && timerCooker.isTimeUp()) {
-        Serial.println("Time's up!!");
-        isTimerStarted = false;
-        cookingPot.setRelayStatus(OFF);
-    }
+    switch (currentState) {
+       case IDLE:
+           break;
+       case WARMUP:
+           warmupController.warmup(temperature);
+           mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), true, false);
+           
+           if (temperature >= START_THRESHOLD) {
+               currentState = COOKING;
+               timerCooker.startTimer();
+           }
+           break;
+       case COOKING:
+           ControlState newReleStatus = pidController.compute(MAX_TEMPERATURE_COOKING, temperature);
+           cookingPot.setRelayStatus(newReleStatus == ON);
+           mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), false, true);
+           if (timerCooker.isTimeUp()) {
+               Serial.println("Time's up!!");
+               cookingPot.setRelayStatus(OFF);
+               currentState = IDLE;
+           }
+           break;
+  }
 }
 
   void onSetTemperature(float temp) override {
@@ -82,16 +84,21 @@ void update() {
       timerCooker.resetTimer();
       isTimerStarted = false;
       timerHasBeenStarted = false;
-      isCookingStarted = false;
     }
   }
 
   void onStartCooking() override {
     Serial.println("Received Start Cooking Command.");
-    isCookingStarted = true;
+    currentState = WARMUP;
+  }
+
+  void reset() {
+    isCookingStarted = false;
     isWarmupCompleted = false;
     isTimerStarted = false;
     timerHasBeenStarted = false;
+    MAX_TEMPERATURE_COOKING = 0; 
+
   }
 
 };

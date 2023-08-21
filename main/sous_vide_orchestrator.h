@@ -43,27 +43,38 @@ class SousVideOrchestrator: public MQTTCommandListener {
       }
 
 void update() {
+
+    if (currentState == IDLE) {
+      Serial.println("State: IDLE");
+      return;
+    }
     float temperature = temperatureSensor.getTemperature();
 
     switch (currentState) {
-       case IDLE:
-           break;
        case WARMUP:
+            Serial.println("State: WARMUP");
+
            warmupController.warmup(temperature);
+           cookingPot.checkRele();
            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), true, false);
            
            if (temperature >= START_THRESHOLD) {
+               Serial.println("Transitioning to COOKING state.");
                currentState = COOKING;
                timerCooker.startTimer();
            }
            break;
        case COOKING:
+            Serial.println("State: COOKING");
+
            ControlState newReleStatus = pidController.compute(MAX_TEMPERATURE_COOKING, temperature);
            cookingPot.setRelayStatus(newReleStatus == ON);
+           cookingPot.checkRele();
            mqttManager.publishMetrics(temperature, timerCooker.getRemainingTimeMillis(), cookingPot.getReleStatus(), false, true);
            if (timerCooker.isTimeUp()) {
                Serial.println("Time's up!!");
-               cookingPot.setRelayStatus(OFF);
+               cookingPot.setRelayStatus(false);
+               cookingPot.checkRele();
                currentState = IDLE;
            }
            break;

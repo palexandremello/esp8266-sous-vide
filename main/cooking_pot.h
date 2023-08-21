@@ -14,6 +14,7 @@ class CookingPot {
 
       void setup() {
         pinMode(relayPin, OUTPUT);
+        digitalWrite(relayPin, HIGH); 
 
       }
 

@@ -27,7 +27,7 @@ public:
             if (client.connect(MQTT_SOUSVIDE_TEMPERATURE, MQTT_USER, MQTT_PASSWORD)) {
                 Serial.println("connected");
                 client.subscribe(MQTT_PARAMS_COOKING);
-                client.subscribe(PID_METRICS)
+                client.subscribe(PID_METRICS);
                 Serial.println("Subscribed to topic: " + String(MQTT_PARAMS_COOKING));
             } else {
                 Serial.print("failed, rc=");
@@ -78,7 +78,7 @@ public:
         doc["temperature"] = temperature;
         doc["remainingTime"] = remainingTime;
         doc["isReleOn"] = isReleOn;
-        doc["isWarmupCompleted"] = isWarmupCompleted;
+        doc["isWarmuping"] = isWarmupCompleted;
         doc["isCookingStarted"] = isCookingStarted;
         String payload;
         serializeJson(doc, payload);

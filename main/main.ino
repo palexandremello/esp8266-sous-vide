@@ -30,7 +30,6 @@ SousVideOrchestrator sous_vide_orchestrator(temperature_sensor, timer_cooker, co
                                             mqttManager, warmup_controller, controller, 
                                             MAX_TEMPERATURE);
 
-mqttManager.setCommandListener(&sous_vide_orchestrator);  
 
 void setup() {
   Serial.begin(115200);
@@ -44,7 +43,7 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-
+  mqttManager.setCommandListener(&sous_vide_orchestrator);  
   sous_vide_orchestrator.setup();
 }
 

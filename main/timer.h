@@ -2,6 +2,7 @@ class TimerCooker {
 
   private:
     unsigned long startTime;
+    bool timerStarted = false;
     unsigned long timingCooking;
     unsigned long elapsedMillis;
     String previousRemainingTime;
@@ -19,6 +20,7 @@ class TimerCooker {
 
   void startTimer() {
     startTime = millis();
+    timerStarted = true;
   }
 
   void setTimer(unsigned long timeToCook) {
@@ -31,6 +33,9 @@ class TimerCooker {
   }
 
   unsigned long getRemainingTimeMillis() {
+    if (elapsedMillis >= timingCooking) {
+        return 0;
+    }
     return (timingCooking - elapsedMillis);
   }
 

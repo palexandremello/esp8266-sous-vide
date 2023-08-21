@@ -1,78 +1,78 @@
 class MQTTManager : public MQTTPublisherInterface {
 
-    private:
-      WiFiClient espClient;
-      PubSubClient client;
-      MQTTCommandListener* listener;
-      long lastMsg = 0;
+private:
+    WiFiClient espClient;
+    PubSubClient client;
+    MQTTCommandListener* listener;
+    long lastMsg = 0;
 
-    public:
-      MQTTManager(const char* mqtt_server) : client(espClient) {
+public:
+    static MQTTManager* instance;
 
+    MQTTManager(const char* mqtt_server) : client(espClient) {
         client.setServer(mqtt_server, MQTT_PORT);
-        client.setCallback([this](char* topic, byte* message, unsigned int length) {
-        this->callback(topic, message, length);
-        });
-      }
+        client.setCallback(MQTTManager::staticCallback);
+        MQTTManager::instance = this;
 
-      void setCommandListener(MQTTCommandListener* listener) {
-          this->listener = listener;
-      }
+    }
 
-      void reconnect() {
+    void setCommandListener(MQTTCommandListener* listener) {
+        this->listener = listener;
+    }
+
+    void reconnect() {
         while (!client.connected()) {
             Serial.print("Attempting MQTT connection...");
 
             if (client.connect(MQTT_SOUSVIDE_TEMPERATURE, MQTT_USER, MQTT_PASSWORD)) {
                 Serial.println("connected");
-
                 client.subscribe(MQTT_PARAMS_COOKING);
+                Serial.println("Subscribed to topic: " + String(MQTT_PARAMS_COOKING));
             } else {
                 Serial.print("failed, rc=");
                 Serial.print(client.state());
                 Serial.println(" try again in 5 seconds");
-
             }
         } 
-      }
+    }
 
-      void loop() {
+    void loop() {
         if (!client.connected()) { 
             reconnect();
         }
-
         client.loop();
+    }
 
-      }
+    static void staticCallback(char* topic, byte* message, unsigned int length) {
+        Serial.println("Entered callback");
+        
+          Serial.print("Message arrived on topic: ");
+          Serial.print(topic);
+          Serial.print(". Message: ");
+          String messageTemp;
+          
+          for (int i = 0; i < length; i++) {
+              Serial.print((char)message[i]);
+              messageTemp += (char)message[i];
+          }
+          Serial.println();
 
-      void callback(char* topic, byte* message, unsigned int length) {
-        Serial.print("Message arrived on topic: ");
-        Serial.print(topic);
-        Serial.print(". Message: ");
-        String messageTemp;
-        for (int i = 0; i < length; i++) {
-            Serial.print((char)message[i]);
-            messageTemp += (char)message[i];
-        }
-        Serial.println();
+          StaticJsonDocument<200> doc;
+          deserializeJson(doc, messageTemp);
 
-        if (listener) {
-          if (String (topic) == SET_TEMPERATURE_TOPIC) {
-             float temp = messageTemp.toFloat();
-             listener->onSetTemperature(temp);
+          float temp = doc["temperature"].as<float>();
+          unsigned long timer = doc["timer"].as<unsigned long>();
+          bool startCooking = doc["startCooking"].as<bool>();
+          if (MQTTManager::instance->listener) {
+              MQTTManager::instance->listener->onSetTemperature(temp);
+              MQTTManager::instance->listener->onSetTimer(timer);
+              if (startCooking) {
+                  MQTTManager::instance->listener->onStartCooking();
+              }
+          }  
+    }
 
-          } else if (String(topic) == SET_TIMER_TOPIC) {
-             unsigned long duration = messageTemp.toInt();
-             listener->onSetTimer(duration);
-
-          } else if (String(topic) == START_COOKING_TOPIC) {
-             listener->onStartCooking();
-           }
-
-        }
-      }
-
-      void publishMetrics(float temperature, long remainingTime, bool isReleOn, bool isWarmupCompleted, bool isCookingStarted) {
+    void publishMetrics(float temperature, unsigned long remainingTime, bool isReleOn, bool isWarmupCompleted, bool isCookingStarted) override {
         StaticJsonDocument<200> doc;
         doc["temperature"] = temperature;
         doc["remainingTime"] = remainingTime;
@@ -82,5 +82,6 @@ class MQTTManager : public MQTTPublisherInterface {
         String payload;
         serializeJson(doc, payload);
         client.publish(MQTT_SOUSVIDE_TEMPERATURE, payload.c_str());
-      }
+    }
 };
+MQTTManager* MQTTManager::instance = nullptr;

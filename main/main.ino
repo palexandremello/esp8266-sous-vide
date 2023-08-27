@@ -21,7 +21,7 @@ unsigned long timingCooking =  0;
 
 // Initialize MQTTManager
 MQTTManager mqttManager(MQTT_SERVER);
-PIDController controller(1, 0.4, 0);
+PIDController controller(1.316, 0.00878, 49.36);
 TimerCooker timer_cooker(timingCooking);
 TemperatureSensor temperature_sensor;
 CookingPot cooking_pot(RELE_PIN);

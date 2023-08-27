@@ -44,13 +44,12 @@ class SousVideOrchestrator: public MQTTCommandListener {
 
 void update() {
 
-    if (currentState == IDLE) {
-      Serial.println("State: IDLE");
-      return;
-    }
     float temperature = temperatureSensor.getTemperature();
 
     switch (currentState) {
+       case IDLE:
+           Serial.println("State: IDLE");
+           break;
        case WARMUP:
             Serial.println("State: WARMUP");
 
